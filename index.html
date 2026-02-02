@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Will You Be My Valentine? ❤️</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #ffdde1, #ee9ca7);
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .page {
+      display: none;
+      text-align: center;
+      background: #fff;
+      padding: 40px 30px;
+      border-radius: 18px;
+      max-width: 420px;
+      width: 90%;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+      position: relative;
+      z-index: 2;
+    }
+
+    .page.active { display: block; }
+
+    h1 { margin-top: 0; }
+
+    button {
+      padding: 14px 26px;
+      font-size: 16px;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      margin: 10px;
+    }
+
+    .yes {
+      background: #ff5a7a;
+      color: white;
+      font-weight: bold;
+    }
+
+    .no {
+      background: #ddd;
+      position: fixed;
+      z-index: 3;
+    }
+
+    /* Hearts */
+    .heart {
+      position: fixed;
+      font-size: 22px;
+      animation: floatUp 3s linear forwards;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(0) scale(1); opacity: 1; }
+      100% { transform: translateY(-200px) scale(1.5); opacity: 0; }
+    }
+
+    /* Balloons */
+    .balloon {
+      position: fixed;
+      width: 30px;
+      height: 40px;
+      border-radius: 50%;
+      animation: fall 6s linear forwards;
+      z-index: 1;
+    }
+
+    @keyframes fall {
+      0% { transform: translateY(-60px); opacity: 1; }
+      100% { transform: translateY(110vh); opacity: 0; }
+    }
+
+    /* Popup */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+    }
+
+    .popup {
+      background: #fff;
+      padding: 30px;
+      border-radius: 16px;
+      max-width: 400px;
+      text-align: center;
+      animation: pop 0.4s ease;
+    }
+
+    @keyframes pop {
+      0% { transform: scale(0.7); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    #scream {
+      position: fixed;
+      font-weight: bold;
+      color: #ff3b3b;
+      font-size: 18px;
+      display: none;
+      z-index: 4;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- PAGE 1 -->
+  <div class="page active" id="page1">
+    <h1>Will you be my Valentine? 💖</h1>
+    <br />
+    <button class="yes" id="yesBtn">YES 💕</button>
+    <button class="no" id="noBtn">NO 🙃</button>
+  </div>
+
+  <!-- PAGE 2 -->
+  <div class="page" id="page2">
+    <h1>YAYYYYY!!! 🥰</h1>
+    <p>You just made my heart very, very happy.</p>
+    <img src="https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif" alt="Shocked Cat" width="220" />
+    <br /><br />
+    <button class="yes" onclick="showPopup()">One more thing… 💌</button>
+  </div>
+
+  <!-- POPUP -->
+  <div class="overlay" id="overlay">
+    <div class="popup">
+      <h2>💐🌹💐 Hey Dimmy🍓🐝❤️ 💐🌹💐</h2>
+      <p>
+        I just want you to know how grateful I am to have you in my life.
+        Being with you makes everything feel lighter, calmer, and more meaningful.
+        I genuinely love the way you are — and I’m really thankful that I get to call you mine.
+      </p>
+      <p><strong>Happy Valentine’s Day 💖</strong></p>
+      <p style="margin-top:12px;">Love, Mike</p>
+      <button class="yes" onclick="closePopup()">Aww 🥹</button>
+    </div>
+  </div>
+
+  <div id="scream">WAIT WHAT?!</div>
+
+<script>
+  const noBtn = document.getElementById('noBtn');
+  const scream = document.getElementById('scream');
+  const yesBtn = document.getElementById('yesBtn');
+
+  const yesSound = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-positive-interface-beep-221.mp3');
+
+  function moveNoButton() {
+    const x = Math.random() * (window.innerWidth - 120);
+    const y = Math.random() * (window.innerHeight - 60);
+    noBtn.style.left = x + 'px';
+    noBtn.style.top = y + 'px';
+
+    scream.style.left = x + 'px';
+    scream.style.top = (y - 30) + 'px';
+    scream.style.display = 'block';
+
+    setTimeout(() => scream.style.display = 'none', 600);
+  }
+
+  noBtn.addEventListener('mouseenter', moveNoButton);
+  noBtn.addEventListener('click', moveNoButton);
+  setInterval(moveNoButton, 1200);
+
+  yesBtn.addEventListener('click', () => {
+    yesSound.play();
+    document.getElementById('page1').classList.remove('active');
+    document.getElementById('page2').classList.add('active');
+    startLove();
+    startBalloons();
+  });
+
+  function startLove() {
+    setInterval(() => {
+      const heart = document.createElement('div');
+      heart.className = 'heart';
+      heart.innerText = '❤️';
+      heart.style.left = Math.random() * window.innerWidth + 'px';
+      heart.style.bottom = '0px';
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 3000);
+    }, 300);
+  }
+
+  function startBalloons() {
+    setInterval(() => {
+      const balloon = document.createElement('div');
+      balloon.className = 'balloon';
+      balloon.style.left = Math.random() * window.innerWidth + 'px';
+      balloon.style.background = `hsl(${Math.random() * 360}, 70%, 80%)`;
+      document.body.appendChild(balloon);
+      setTimeout(() => balloon.remove(), 6000);
+    }, 500);
+  }
+
+  function showPopup() {
+    document.getElementById('overlay').style.display = 'flex';
+  }
+
+  function closePopup() {
+    document.getElementById('overlay').style.display = 'none';
+  }
+</script>
+
+</body>
+</html>
